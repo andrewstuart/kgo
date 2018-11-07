@@ -16,4 +16,4 @@ docker: test
 
 deploy: docker
 	kubectl apply -f k8s.yaml
-	kubectl --namespace $(NAMESPACE) set image deploment/$(APP) $(APP)=$(call SHA,$(FQTAG))
+	kubectl --namespace $(NAMESPACE) set image deployment/$(APP) $(APP)=$(call SHA,$(FQTAG))
