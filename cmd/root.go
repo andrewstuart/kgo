@@ -111,14 +111,14 @@ func init() {
 	viper.BindPFlag("k8s.namespace", rootCmd.Flags().Lookup("namespace"))
 	viper.SetDefault("k8s.namespace", "default")
 
-	rootCmd.Flags().StringP("appname", "a", "", "The name of the app")
-	viper.BindPFlag("k8s.appname", rootCmd.Flags().Lookup("appname"))
+	rootCmd.Flags().StringP("app", "a", "", "The name of the app")
+	viper.BindPFlag("k8s.app", rootCmd.Flags().Lookup("app"))
 
 	rootCmd.Flags().StringP("image", "i", "", "The name of the docker image/path")
 	viper.BindPFlag("docker.image", rootCmd.Flags().Lookup("image"))
 
 	if dir, err := os.Getwd(); err == nil {
-		viper.SetDefault("k8s.appname", path.Base(dir))
+		viper.SetDefault("k8s.app", path.Base(dir))
 		viper.SetDefault("docker.image", path.Base(dir))
 	}
 }
