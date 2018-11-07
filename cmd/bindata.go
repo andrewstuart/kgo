@@ -5,7 +5,7 @@
 // templates/k8s.yaml
 // DO NOT EDIT!
 
-package main
+package cmd
 
 import (
 	"bytes"

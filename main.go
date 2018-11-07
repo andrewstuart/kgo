@@ -1,58 +1,27 @@
+// Copyright © 2018 Andrew Stuart
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
 package main
 
-import (
-	"fmt"
-	"log"
-	"os"
-	"path"
-	"text/template"
-)
+import "astuart.co/kgo/cmd"
 
-//go:generate go-bindata -pkg main templates/
 func main() {
-	t := template.New("templates")
-	fs, err := AssetDir("templates")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	d, _ := os.Getwd()
-
-	data := tpl{
-		DockerRoot: "docker.astuart.co/astuart/gotest",
-		Image:      path.Base(d),
-		Name:       path.Base(d),
-		Namespace:  "default",
-	}
-
-	for _, file := range fs {
-		t2, err := t.New(file).Parse(string(MustAsset("templates/" + file)))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		if _, err := os.Stat(file); err == nil {
-			fmt.Println(file + " already exists; skipping")
-			continue
-		}
-
-		f, err := os.OpenFile(file, os.O_CREATE|os.O_RDWR|os.O_TRUNC, 0640)
-		if err != nil {
-			fmt.Printf("error opening file %q: %s\n", file, err)
-			continue
-		}
-
-		err = t2.Execute(f, data)
-		if err != nil {
-			fmt.Println("error templating: ", err)
-		}
-	}
-
-}
-
-type tpl struct {
-	DockerRoot string
-	Image      string
-	Name       string
-	Namespace  string
+	cmd.Execute()
 }
