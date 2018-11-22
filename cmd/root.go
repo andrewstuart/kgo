@@ -26,7 +26,9 @@ import (
 	"os"
 	"path"
 
-	"github.com/alecthomas/template"
+	"text/template"
+
+	"github.com/Masterminds/sprig"
 	homedir "github.com/mitchellh/go-homedir"
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -61,7 +63,7 @@ var rootCmd = &cobra.Command{
 		}
 
 		for _, file := range fs {
-			t2, err := t.New(file).Parse(string(MustAsset("templates/" + file)))
+			t2, err := t.New(file).Funcs(sprig.TxtFuncMap()).Parse(string(MustAsset("templates/" + file)))
 			if err != nil {
 				log.Fatal(err)
 			}
