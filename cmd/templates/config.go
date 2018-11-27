@@ -21,18 +21,18 @@ func setupConfig() {
 	cfg.SetConfigName("{{ .Name }}")
 	cfg.SetEnvPrefix("{{ .Name | upper }}")
 
-	if err := viper.ReadInConfig(); err != nil {
-		lg.WithError(err).Error("could not read initial config")
-	}
-
 	cfg.AutomaticEnv()
 	cfg.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
+	if err := cfg.ReadInConfig(); err != nil {
+		lg.WithError(err).Error("could not read initial config")
+	}
+
 	cfg.OnConfigChange(func(_ fsnotify.Event) {
-		if err := viper.ReadInConfig(); err != nil {
+		if err := cfg.ReadInConfig(); err != nil {
 			lg.WithError(err).Warn("could not reload config")
 		}
 	})
 
-	cfg.WatchConfig()
+	go cfg.WatchConfig()
 }
