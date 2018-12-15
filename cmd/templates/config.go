@@ -3,8 +3,8 @@ package main
 import (
 	"strings"
 
-	"github.com/Sirupsen/logrus"
 	"github.com/fsnotify/fsnotify"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
