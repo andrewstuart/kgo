@@ -41,11 +41,11 @@ metadata:
   namespace: {{ .Namespace }}
 spec:
   tls:
-  - secretName: {{ $ing }}
+  - secretName: {{ $ing }}.tls
     hosts:
-    - {{ $ing }}.tld
+    - {{ $ing }}
   rules:
-  - host: {{ $ing }}.tld
+  - host: {{ $ing }}
     http:
       paths:
       - path: /
