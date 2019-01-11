@@ -32,3 +32,24 @@ spec:
     targetPort: 8080
   selector:
     app: {{ .Name }}
+{{ if .Ingress }}{{ $ing := printf "%s.%s" .Name (default .Domain "astuart.co") }}
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: {{ .Name }}
+  namespace: {{ .Namespace }}
+spec:
+  tls:
+  - secretName: {{ $ing }}
+    hosts:
+    - {{ $ing }}.tld
+  rules:
+  - host: {{ $ing }}.tld
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: {{ .Name }}
+          servicePort: 80
+{{ end }}

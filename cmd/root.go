@@ -34,13 +34,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-type tpl struct {
-	DockerRoot string
-	Image      string
-	Name       string
-	Namespace  string
-}
-
 //go:generate go-bindata -pkg cmd templates/
 var cfgFile string
 
@@ -55,11 +48,13 @@ var rootCmd = &cobra.Command{
 			log.Fatal(err)
 		}
 
-		data := tpl{
-			DockerRoot: viper.GetString("docker.registry"),
-			Image:      viper.GetString("docker.image"),
-			Name:       viper.GetString("k8s.app"),
-			Namespace:  viper.GetString("k8s.namespace"),
+		data := map[string]interface{}{
+			"DockerRoot": viper.GetString("docker.registry"),
+			"Image":      viper.GetString("docker.image"),
+			"Name":       viper.GetString("k8s.app"),
+			"Namespace":  viper.GetString("k8s.namespace"),
+			"Domain":     viper.GetString("k8s.domain"),
+			"Ingress":    viper.GetBool("k8s.ingress"),
 		}
 
 		for _, file := range fs {
@@ -123,6 +118,12 @@ func init() {
 		viper.SetDefault("k8s.app", path.Base(dir))
 		viper.SetDefault("docker.image", path.Base(dir))
 	}
+
+	rootCmd.Flags().Bool("ingress", false, "Whether to add ingress")
+	viper.BindPFlag("k8s.ingress", rootCmd.Flags().Lookup("ingress"))
+
+	rootCmd.Flags().String("domain", "astuart.co", "The dns domain to use for ingress")
+	viper.BindPFlag("k8s.domain", rootCmd.Flags().Lookup("domain"))
 }
 
 // initConfig reads in config file and ENV variables if set.
