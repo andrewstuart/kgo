@@ -1,6 +1,6 @@
 FROM golang
 
-WORKDIR $GOPATH/app
+WORKDIR $GOPATH/src/app
 
 ADD . .
 
