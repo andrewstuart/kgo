@@ -1,8 +1,7 @@
 // Copyright © 2018 Andrew Stuart
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
+// of this software and associated documentation files (the "Software"), to deal // in the Software without restriction, including without limitation the rights
 // to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 // copies of the Software, and to permit persons to whom the Software is
 // furnished to do so, subject to the following conditions:
@@ -55,6 +54,7 @@ var rootCmd = &cobra.Command{
 			"Namespace":  viper.GetString("k8s.namespace"),
 			"Domain":     viper.GetString("k8s.domain"),
 			"Ingress":    viper.GetBool("k8s.ingress"),
+			"CORS":       viper.GetBool("go.cors"),
 		}
 
 		for _, file := range fs {
@@ -124,6 +124,9 @@ func init() {
 
 	rootCmd.Flags().String("domain", "astuart.co", "The dns domain to use for ingress")
 	viper.BindPFlag("k8s.domain", rootCmd.Flags().Lookup("domain"))
+
+	rootCmd.Flags().Bool("cors", true, "Use gorilla cors")
+	viper.BindPFlag("go.cors", rootCmd.Flags().Lookup("cors"))
 }
 
 // initConfig reads in config file and ENV variables if set.

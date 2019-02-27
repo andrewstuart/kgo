@@ -9,11 +9,11 @@ import (
 )
 
 var (
-	cfg = viper.New()
-	lg  = logrus.New()
+	lg = logrus.New()
 )
 
-func setupConfig() {
+func setupConfig() *viper.Viper {
+	cfg := viper.New()
 	cfg.AddConfigPath(".")
 	cfg.AddConfigPath("$HOME/{{ .Name }}")
 	cfg.AddConfigPath("/etc/{{ .Name }}")
@@ -35,4 +35,6 @@ func setupConfig() {
 	})
 
 	go cfg.WatchConfig()
+
+	return cfg
 }

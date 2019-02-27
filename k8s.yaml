@@ -1,0 +1,55 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: kgo
+  namespace: default
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: kgo
+    spec:
+      containers:
+      - name: kgo
+        image: docker.astuart.co/andrew/kgo
+        imagePullPolicy: Always
+        resources:
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        ports:
+        - containerPort: 8080
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: kgo
+  namespace: default
+spec:
+  ports:
+  - port: 80
+    targetPort: 8080
+  selector:
+    app: kgo
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: kgo
+  namespace: default
+spec:
+  tls:
+  - secretName: kgo.astuart.co.tls
+    hosts:
+    - kgo.astuart.co
+  rules:
+  - host: kgo.astuart.co
+    http:
+      paths:
+      - path: /
+        backend:
+          serviceName: kgo
+          servicePort: 80
+
