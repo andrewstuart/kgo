@@ -1,7 +1,7 @@
-FROM golang
+FROM golang:stretch
 
 WORKDIR $GOPATH/src/app
 
-ADD . .
+ENTRYPOINT /app
 
-RUN go get && go build -o /app
+ADD app /

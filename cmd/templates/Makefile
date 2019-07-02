@@ -10,7 +10,10 @@ SHA=$(shell docker inspect --format "{{`{{ index .RepoDigests 0 }}`}}" $(1))
 test:
 	go test ./...
 
-docker: test
+go:
+	GOOS=linux go build -o app
+
+docker: go test
 	docker build -t $(FQTAG) . 
 	docker push $(FQTAG)
 
