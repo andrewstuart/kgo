@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	setupConfig()
+	cfg := setupConfig()
 	lg.Info("started")
 
 	reg := health.NewRegistry()
@@ -24,14 +24,14 @@ func main() {
 	})
 
 	{{ if .CORS -}}
-	http.ListenAndServe(
+	lg.Fatal(http.ListenAndServe(
 		":8080", 
 		handlers.CORS(
 			handlers.AllowedHeaders([]string{"Authorization"}),
 			handlers.AllowedOrigins([]string{"*"}),
 		)(r),
-	)
+	))
 {{ else -}}
-	http.ListenAndServe(":8080", r)
+	lg.Fatal(http.ListenAndServe(":8080", r))
 {{ end -}}
 }
