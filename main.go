@@ -24,3 +24,4 @@ import "astuart.co/kgo/cmd"
 func main() {
 	cmd.Execute()
 }
+
