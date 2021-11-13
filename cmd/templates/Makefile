@@ -11,7 +11,7 @@ test:
 	go test ./...
 
 go:
-	GOOS=linux go build -o app
+	CGO_ENABLED=0 GOOS=linux go build -o app
 
 docker: go test
 	docker build -t $(FQTAG) . 

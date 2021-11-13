@@ -7,11 +7,18 @@ import (
 	health "astuart.co/go-healthcheck"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	jaegercfg "github.com/uber/jaeger-client-go/config"
 )
 
 func main() {
 	cfg := setupConfig()
 	lg.Info("started")
+
+	cfg, err := jaegercfg.FromEnv()
+	if err != nil {
+		logrus.WithError(err).Fatal("couldn't load tracer config")
+	}
+	tracer, closer, err := cfg.InitGlobalTracer("{{ .Name }}")
 
 	reg := health.NewRegistry()
 	r := mux.NewRouter()
