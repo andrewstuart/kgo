@@ -30,7 +30,7 @@ func setupOtel(ctx context.Context) {
 		resource.Default(),
 		resource.NewWithAttributes(
 			semconv.SchemaURL,
-			semconv.ServiceNameKey.String("redditpsql"),
+			semconv.ServiceNameKey.String("{{ .Name }}"),
 			semconv.ServiceVersionKey.String("develop"),
 			attribute.String("env", "production"),
 		),
