@@ -21,6 +21,8 @@ func setupConfig() *viper.Viper {
 	cfg.SetConfigName("{{ .Name }}")
 	cfg.SetEnvPrefix("{{ .Name | upper }}")
 
+	cfg.SetDefault("name", "{{ .Name | upper }}")
+
 	cfg.AutomaticEnv()
 	cfg.SetEnvKeyReplacer(strings.NewReplacer(".", "_"))
 
