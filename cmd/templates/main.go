@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	meter = global.Meter("{{ .Name | tolower }}", metric.WithDescription("time taken for pic download"))
+	meter = global.Meter("{{ .Name | lower }}", metric.WithDescription("time taken for pic download"))
 	ctr   = meter.NewFloat64Histogram("hello_world_latency", instrument.WithUnit(unit.Second))
 )
 
