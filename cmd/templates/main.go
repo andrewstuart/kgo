@@ -5,9 +5,14 @@ import (
 	"net/http"
 
 	health "astuart.co/go-healthcheck"
+	"github.com/andrewstuart/multierrgroup"
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 	"github.com/gopuff/morecontext"
+	"go.opentelemetry.io/otel"
+	"go.opentelemetry.io/otel/attribute"
+	"go.opentelemetry.io/otel/metric"
+	"go.opentelemetry.io/otel/metric/global"
 )
 
 var (
@@ -17,7 +22,7 @@ var (
 
 func main() {
 	ctx := morecontext.ForSignals()
-	setupOtel(ctx)
+	shutdown := setupOtel(ctx)
 	cfg := setupConfig()
 	lg.Info("started")
 
@@ -57,4 +62,20 @@ func main() {
 		{{ end -}}
 	}
 
+	go srv.ListenAndServe()
+
+	<-ctx.Done()
+
+	var meg multierrgroup.Group
+	meg.Go(func() error {
+		return stop(ctx)
+	})
+	meg.Go(func() error {
+		return srv.Shutdown(ctx)
+	})
+
+	err := meg.Wait()
+	if err != nil {
+		logrus.WithError(err).Fatal("error shutting down gracefully")
+	}
 }

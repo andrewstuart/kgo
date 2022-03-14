@@ -20,7 +20,7 @@ import (
 	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 )
 
-func setupOtel(ctx context.Context) {
+func setupOtel(ctx context.Context) func(context.Context) error {
 	// Traces
 	tr, err := otlptracegrpc.New(ctx, otlptracegrpc.WithEndpoint("opentelemetry-collector.opentelemetry-collector:4317"), otlptracegrpc.WithInsecure())
 	if err != nil {
@@ -60,4 +60,6 @@ func setupOtel(ctx context.Context) {
 		controller.WithCollectPeriod(2*time.Second),
 	)
 	global.SetMeterProvider(pusher)
+
+	return tr.Shutdown
 }
