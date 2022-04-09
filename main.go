@@ -19,9 +19,8 @@
 
 package main
 
-import "astuart.co/kgo/cmd"
+import "github.com/andrewstuart/kgo/cmd"
 
 func main() {
 	cmd.Execute()
 }
-

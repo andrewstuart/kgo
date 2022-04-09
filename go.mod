@@ -1,4 +1,4 @@
-module astuart.co/kgo
+module github.com/andrewstuart/kgo
 
 require (
 	astuart.co/go-healthcheck v0.3.0
